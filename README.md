@@ -2,6 +2,8 @@
 
 A modern, native macOS application for converting images, videos, and audio files between various formats. Built with Python and CustomTkinter, featuring a beautiful dark-themed interface that follows macOS design principles.
 
+![Mac Universal Converter Screenshot](https://github.com/as4401s/Mac-Universal-Converter/raw/main/App-image.png)
+
 ## ✨ Features
 
 - **Multi-Format Support**: Convert between 30+ file formats
