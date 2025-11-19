@@ -41,14 +41,7 @@ brew install ffmpeg
 
 ## 🚀 Installation
 
-### Option 1: Download Pre-built App
-
-1. Download `MacConverter.app` from the [Releases](https://github.com/as4401s/Mac-Universal-Converter/releases) page
-2. Move the app to your Applications folder
-3. Right-click and select "Open" (first time only, to bypass Gatekeeper)
-4. Ensure ffmpeg is installed: `brew install ffmpeg`
-
-### Option 2: Build from Source
+### Option 1: Build from Source
 
 1. Clone the repository:
    ```bash
