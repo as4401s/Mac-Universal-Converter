@@ -10,7 +10,7 @@ A modern, native macOS application for converting images, videos, and audio file
 - **Batch Processing**: Convert multiple files at once
 - **Modern UI**: Beautiful dark-themed interface with macOS-native feel
 - **Three Conversion Modes**:
-  - **Image Mode**: PNG, JPEG, WEBP, ICNS, PDF, TIFF, BMP, ICO, HEIC
+  - **Image Mode**: PNG, JPEG, WEBP, ICNS, PDF, TIFF, BMP, ICO, HEIC, SVG
   - **Video Mode**: MP4, MOV, AVI, MKV, WEBM, WMV, FLV, MPEG, GIF
   - **Audio Mode**: MP3, WAV, FLAC, AAC, M4A, OGG, WMA, AIFF
 - **HEIC Support**: Native support for Apple's HEIC image format
@@ -34,11 +34,16 @@ The main area displays:
 - **macOS**: 10.15 (Catalina) or later
 - **Python**: 3.12 or later (for development)
 - **ffmpeg**: Required for video/audio conversion (install via Homebrew)
+- **Cairo**: Required for SVG format support (install via Homebrew)
 
-### Installing ffmpeg
+### Installing Dependencies
 
 ```bash
+# Required for video/audio conversion
 brew install ffmpeg
+
+# Required for SVG format support
+brew install cairo
 ```
 
 ## 🚀 Installation
@@ -88,8 +93,8 @@ brew install ffmpeg
 ## 📁 Supported Formats
 
 ### Image Formats
-- **Input**: JPG, JPEG, PNG, HEIC, WEBP, BMP, TIFF, ICO, PDF
-- **Output**: PNG, JPEG, JPG, WEBP, ICNS, PDF, TIFF, BMP, ICO, HEIC
+- **Input**: JPG, JPEG, PNG, HEIC, WEBP, BMP, TIFF, ICO, PDF, SVG
+- **Output**: PNG, JPEG, JPG, WEBP, ICNS, PDF, TIFF, BMP, ICO, HEIC, SVG
 
 ### Video Formats
 - **Input**: MP4, MOV, AVI, MKV, WEBM, WMV, FLV, MPEG, GIF
@@ -118,6 +123,7 @@ Mac-Universal-Converter/
 - **customtkinter**: Modern, customizable Tkinter widgets
 - **Pillow**: Image processing
 - **pillow-heif**: HEIC format support
+- **cairosvg**: SVG format support
 - **moviepy**: Video and audio processing
 - **PyInstaller**: Application bundling
 
@@ -156,9 +162,15 @@ uv run python build_app.py
 - The app includes pillow-heif, but may require system libraries
 - Try converting HEIC files using the Image mode
 
+### SVG conversion not working
+- Ensure Cairo is installed: `brew install cairo`
+- SVG support requires the Cairo library to be available on your system
+- The app will work without Cairo, but SVG conversion features will be disabled
+
 ## 📝 Notes
 
 - **ICNS Format**: When converting to ICNS, images are automatically resized to 1024x1024 for optimal quality
+- **SVG Format**: SVG conversion requires Cairo library (`brew install cairo`). SVG to raster conversion uses cairosvg, while raster to SVG embeds the image as base64-encoded PNG
 - **Video Codecs**: Uses libx264 for most video formats, libvpx for WebM
 - **Audio Extraction**: Can extract audio from video files
 - **Batch Processing**: All files in the queue are processed sequentially
