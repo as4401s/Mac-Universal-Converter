@@ -27,6 +27,14 @@ def build():
         'PIL._tkinter_finder',  # PIL tkinter support
         'PIL._webp',  # WebP support
         
+        # SVG support
+        'cairosvg',
+        'cairocffi',
+        'cssselect2',
+        'defusedxml',
+        'tinycss2',
+        'webencodings',
+        
         # MoviePy and all its submodules
         'moviepy',
         'moviepy.editor',
@@ -68,6 +76,8 @@ def build():
         '--copy-metadata=numpy',
         '--copy-metadata=Pillow',
         '--copy-metadata=pillow-heif',
+        '--copy-metadata=cairosvg',
+        '--copy-metadata=cairocffi',
     ]
 
     # 5. Build PyInstaller command

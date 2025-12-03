@@ -5,9 +5,19 @@ from pathlib import Path
 from PIL import Image
 import threading
 import pillow_heif
+import base64
+import io
 
 # Audio/Video processing
 from moviepy.editor import VideoFileClip, AudioFileClip
+
+# SVG processing
+try:
+    import cairosvg
+    SVG_SUPPORT = True
+except (ImportError, OSError):
+    # OSError occurs when cairo library is not installed on system
+    SVG_SUPPORT = False
 
 # Register HEIF opener for Apple formats
 pillow_heif.register_heif_opener()
@@ -51,13 +61,13 @@ class MacConverterPro(ctk.CTk):
         
         # --- Format Definitions ---
         self.format_categories = {
-            "Image": ["PNG", "JPEG", "JPG", "WEBP", "ICNS", "PDF", "TIFF", "BMP", "ICO", "HEIC"],
+            "Image": ["PNG", "JPEG", "JPG", "WEBP", "ICNS", "PDF", "TIFF", "BMP", "ICO", "HEIC", "SVG"],
             "Audio": ["MP3", "WAV", "FLAC", "AAC", "M4A", "OGG", "WMA", "AIFF"],
             "Video": ["MP4", "MOV", "AVI", "MKV", "WEBM", "WMV", "FLV", "MPEG", "GIF"]
         }
 
         self.valid_inputs = {
-            "image": ['.jpg', '.jpeg', '.png', '.heic', '.webp', '.bmp', '.tiff', '.ico', '.pdf'],
+            "image": ['.jpg', '.jpeg', '.png', '.heic', '.webp', '.bmp', '.tiff', '.ico', '.pdf', '.svg'],
             "video": ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.wmv', '.flv', '.mpeg', '.gif'],
             "audio": ['.mp3', '.wav', '.flac', '.m4a', '.ogg', '.wma', '.aiff', '.aac']
         }
@@ -361,8 +371,37 @@ class MacConverterPro(ctk.CTk):
                 # --- IMAGE MODE ---
                 if mode == "Image":
                     if ext in self.valid_inputs['image']:
-                        with Image.open(filepath) as img:
-                            if fmt == 'icns':
+                        # Handle SVG input
+                        if ext == '.svg':
+                            if not SVG_SUPPORT:
+                                raise ValueError("SVG support requires cairosvg. Install with: pip install cairosvg")
+                            # Convert SVG to PNG first, then process
+                            png_data = cairosvg.svg2png(url=filepath)
+                            img = Image.open(io.BytesIO(png_data))
+                        else:
+                            img = Image.open(filepath)
+                        
+                        try:
+                            # Handle SVG output
+                            if fmt == 'svg':
+                                if not SVG_SUPPORT:
+                                    raise ValueError("SVG support requires cairosvg. Install with: pip install cairosvg")
+                                # Convert image to PNG bytes, then embed in SVG
+                                if img.mode != 'RGBA': img = img.convert('RGBA')
+                                png_buffer = io.BytesIO()
+                                img.save(png_buffer, format='PNG')
+                                png_data = png_buffer.getvalue()
+                                png_base64 = base64.b64encode(png_data).decode('utf-8')
+                                
+                                # Create SVG wrapper with embedded PNG
+                                width, height = img.size
+                                svg_content = f'''<?xml version="1.0" encoding="UTF-8"?>
+<svg width="{width}" height="{height}" xmlns="http://www.w3.org/2000/svg">
+  <image width="{width}" height="{height}" href="data:image/png;base64,{png_base64}"/>
+</svg>'''
+                                with open(out_path, 'w', encoding='utf-8') as f:
+                                    f.write(svg_content)
+                            elif fmt == 'icns':
                                 if img.mode != 'RGBA': img = img.convert('RGBA')
                                 img = img.resize((1024, 1024), Image.Resampling.LANCZOS)
                                 img.save(out_path, format='ICNS')
@@ -370,6 +409,9 @@ class MacConverterPro(ctk.CTk):
                                 if fmt in ['jpeg', 'jpg', 'bmp'] and img.mode in ('RGBA', 'LA'):
                                     img = img.convert('RGB')
                                 img.save(out_path, quality=95)
+                        finally:
+                            img.close()
+                        
                         success += 1
                         self.mark_row(filepath, "success")
                     else:
