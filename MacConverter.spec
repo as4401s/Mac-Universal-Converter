@@ -9,6 +9,8 @@ datas += copy_metadata('proglog')
 datas += copy_metadata('numpy')
 datas += copy_metadata('Pillow')
 datas += copy_metadata('pillow-heif')
+datas += copy_metadata('cairosvg')
+datas += copy_metadata('cairocffi')
 
 
 a = Analysis(
@@ -16,7 +18,7 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=datas,
-    hiddenimports=['pillow_heif', 'PIL._tkinter_finder', 'PIL._webp', 'moviepy', 'moviepy.editor', 'moviepy.video', 'moviepy.video.io', 'moviepy.video.fx', 'moviepy.video.fx.all', 'moviepy.audio', 'moviepy.audio.io', 'moviepy.audio.fx', 'moviepy.audio.fx.all', 'moviepy.config', 'moviepy.tools', 'proglog', 'decorator', 'imageio', 'imageio_ffmpeg', 'numpy', 'requests', 'tqdm', 'moviepy.video.tools', 'moviepy.audio.tools', 'moviepy.video.compositing', 'moviepy.audio.AudioClip', 'moviepy.video.VideoClip'],
+    hiddenimports=['pillow_heif', 'PIL._tkinter_finder', 'PIL._webp', 'cairosvg', 'cairocffi', 'cssselect2', 'defusedxml', 'tinycss2', 'webencodings', 'moviepy', 'moviepy.editor', 'moviepy.video', 'moviepy.video.io', 'moviepy.video.fx', 'moviepy.video.fx.all', 'moviepy.audio', 'moviepy.audio.io', 'moviepy.audio.fx', 'moviepy.audio.fx.all', 'moviepy.config', 'moviepy.tools', 'proglog', 'decorator', 'imageio', 'imageio_ffmpeg', 'numpy', 'requests', 'tqdm', 'moviepy.video.tools', 'moviepy.audio.tools', 'moviepy.video.compositing', 'moviepy.audio.AudioClip', 'moviepy.video.VideoClip'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
